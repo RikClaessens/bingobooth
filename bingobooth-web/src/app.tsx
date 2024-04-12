@@ -21,7 +21,7 @@ if (!rootElement.innerHTML) {
   const root = ReactDOM.createRoot(rootElement);
   root.render(
     <StrictMode>
-      <ThemeProvider defaultTheme="dark" storageKey="bingolab-ui-theme">
+      <ThemeProvider defaultTheme="dark" storageKey="bingobooth-ui-theme">
         <RouterProvider router={router} />
       </ThemeProvider>
     </StrictMode>,
