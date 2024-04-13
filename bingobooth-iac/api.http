@@ -11,8 +11,8 @@ Accept: */*
 
 ###
 
-@spotify_client_id = 9af724cce45f42039bd7f0aefdf6d1fe
-@spotify_client_secret = b404544aba4646e18d0a246e390948eb
+@spotify_client_id = {{$dotenv SPOTIFY_CLIENT_ID}}
+@spotify_client_secret = {{$dotenv SPOTIFY_CLIENT_SECRET}}
 ###
 # @name spotify_auth
 POST https://accounts.spotify.com/api/token HTTP/1.1
