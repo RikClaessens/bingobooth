@@ -1,0 +1,7 @@
+POST https://75bu3dofpa.execute-api.eu-west-1.amazonaws.com
+Content-Type: application/json
+Accept: */*
+
+{
+  "playlistUrl": "https://open.spotify.com/playlist/7Gglh5v1w2Nuz5wfav7JpM?si=19e03b8c8e4f4a07"
+}

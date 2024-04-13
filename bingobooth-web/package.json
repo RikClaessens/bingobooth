@@ -1,7 +1,9 @@
 {
   "name": "bingobooth-web",
+  "version": "1.0.0",
+  "author": "Rik Claessens",
   "private": true,
-  "version": "0.0.0",
+  "license": "UNLICENSED",
   "type": "module",
   "scripts": {
     "dev": "vite",
