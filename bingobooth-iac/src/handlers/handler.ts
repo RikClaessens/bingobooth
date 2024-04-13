@@ -21,7 +21,7 @@ export const createHandler = ({
   return (
     middy(handler)
       // .use(errorLogger())
-      // .use(inputOutputLogger())
+      .use(inputOutputLogger())
       // .use(httpHeaderNormalizer())
       // .use(httpEventNormalizer())
       .use(jsonBodyParser())

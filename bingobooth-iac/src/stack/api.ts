@@ -27,8 +27,21 @@ class BingoboothApi extends Construct {
     this.api = new apigwv2.HttpApi(this, `bingobooth-api-${this.stage}`, {
       disableExecuteApiEndpoint: false,
       corsPreflight: {
-        allowMethods: [CorsHttpMethod.POST, CorsHttpMethod.GET],
+        allowMethods: [
+          CorsHttpMethod.POST,
+          CorsHttpMethod.GET,
+          CorsHttpMethod.OPTIONS,
+        ],
         allowOrigins: ['*'],
+        allowHeaders: [
+          'Accept',
+          'Content-Type',
+          'Authorization',
+          'X-Amz-Date',
+          'X-Api-Key',
+          'X-Amz-Security-Token',
+          'X-Amz-User-Agent',
+        ],
       },
     });
 
@@ -39,6 +52,7 @@ class BingoboothApi extends Construct {
         SPOTIFY_CLIENT_ID: props.spotify.clientId,
         SPOTIFY_CLIENT_SECRET: props.spotify.clientSecret,
       },
+      memorySize: 512,
     });
 
     new CfnOutput(this, 'ApiEndpoint', {
@@ -52,12 +66,14 @@ class BingoboothApi extends Construct {
     methods,
     environment,
     timeout,
+    memorySize,
   }: {
     functionName: string;
     path?: string;
     methods: apigwv2.HttpMethod[];
     environment: Record<string, string>;
     timeout?: number;
+    memorySize?: number;
   }) {
     if (!path) {
       path = `/${functionName}`;
@@ -70,6 +86,7 @@ class BingoboothApi extends Construct {
         entry: `src/handlers/${functionName}.ts`,
         environment,
         timeout: timeout ? Duration.seconds(timeout) : undefined,
+        memorySize: memorySize || 128,
       },
     );
     const integration = new HttpLambdaIntegration(

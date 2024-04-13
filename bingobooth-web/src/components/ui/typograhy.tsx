@@ -145,4 +145,4 @@ const Muted = React.forwardRef<
 ));
 Muted.displayName = 'Muted';
 
-export { H1, H2, H3, H4, P, Blockquote, Code, Lead };
+export { H1, H2, H3, H4, P, Blockquote, Code, Lead, Large, Small, Muted };
