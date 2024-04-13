@@ -1,15 +1,10 @@
 import type { APIGatewayProxyEventV2, APIGatewayProxyResult } from 'aws-lambda';
 import { JSONSchemaType } from 'ajv';
-import pino from 'pino';
+import { getPlaylistFromUrl } from '../spotify';
 import { createHandler } from './handler';
 
 interface InputProps {
   body: { playlistUrl: string };
-}
-
-interface OutputProps {
-  body: string;
-  statusCode: number;
 }
 
 const eventSchema: JSONSchemaType<InputProps> = {
@@ -26,18 +21,18 @@ const eventSchema: JSONSchemaType<InputProps> = {
   },
 };
 
-const validatePlaylistUrlHandler = async (
+const mainHandler = async (
   event: APIGatewayProxyEventV2,
 ): Promise<APIGatewayProxyResult> => {
   const { playlistUrl } = event.body as unknown as Record<string, string>;
-  pino().info({ playlistUrl }, 'Validating playlist URL');
+  const playlist = await getPlaylistFromUrl(playlistUrl);
   return {
     statusCode: 200,
-    body: JSON.stringify({ valid: true }, null, 2),
+    body: JSON.stringify({ playlist }, null, 2),
   };
 };
 
 export const handler = createHandler({
-  handler: validatePlaylistUrlHandler,
+  handler: mainHandler,
   eventSchema,
 });

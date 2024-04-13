@@ -1,5 +1,6 @@
 import {
   CfnOutput,
+  Duration,
   Stack,
   aws_apigatewayv2 as apigwv2,
   aws_lambda_nodejs as lambda_nodejs,
@@ -10,6 +11,10 @@ import { Construct } from 'constructs';
 
 interface ApiProps {
   stage: string;
+  spotify: {
+    clientId: string;
+    clientSecret: string;
+  };
 }
 
 class BingoboothApi extends Construct {
@@ -27,20 +32,44 @@ class BingoboothApi extends Construct {
       },
     });
 
-    this.addEndpoint('validatePlaylistUrl', [apigwv2.HttpMethod.POST]);
+    this.addEndpoint({
+      functionName: 'get-playlist',
+      methods: [apigwv2.HttpMethod.POST],
+      environment: {
+        SPOTIFY_CLIENT_ID: props.spotify.clientId,
+        SPOTIFY_CLIENT_SECRET: props.spotify.clientSecret,
+      },
+    });
 
     new CfnOutput(this, 'ApiEndpoint', {
       value: this.api.apiEndpoint,
     });
   }
 
-  addEndpoint(functionName: string, methods: apigwv2.HttpMethod[]) {
+  addEndpoint({
+    functionName,
+    path,
+    methods,
+    environment,
+    timeout,
+  }: {
+    functionName: string;
+    path?: string;
+    methods: apigwv2.HttpMethod[];
+    environment: Record<string, string>;
+    timeout?: number;
+  }) {
+    if (!path) {
+      path = `/${functionName}`;
+    }
     const lambdaFunction = new lambda_nodejs.NodejsFunction(
       this,
       functionName,
       {
         functionName: `${functionName}-${this.stage}`,
         entry: `src/handlers/${functionName}.ts`,
+        environment,
+        timeout: timeout ? Duration.seconds(timeout) : undefined,
       },
     );
     const integration = new HttpLambdaIntegration(
@@ -49,7 +78,7 @@ class BingoboothApi extends Construct {
     );
 
     this.api.addRoutes({
-      path: '/',
+      path,
       methods,
       integration: integration,
     });

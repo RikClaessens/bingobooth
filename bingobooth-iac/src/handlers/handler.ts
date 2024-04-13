@@ -8,7 +8,6 @@ import jsonBodyParser from '@middy/http-json-body-parser';
 import inputOutputLogger from '@middy/input-output-logger';
 import validator from '@middy/validator';
 import { transpileSchema } from '@middy/validator/transpile';
-import pino from 'pino';
 
 export const createHandler = ({
   handler,
@@ -19,20 +18,19 @@ export const createHandler = ({
   eventSchema?: object;
   responseSchema?: object;
 }) => {
-  return middy(handler)
-    .use(
-      errorLogger({
-        logger: pino,
-      }),
-    )
-    .use(inputOutputLogger())
-    .use(httpHeaderNormalizer())
-    .use(jsonBodyParser())
-    .use(
-      validator({
-        eventSchema: eventSchema && transpileSchema(eventSchema),
-        responseSchema: responseSchema && transpileSchema(responseSchema),
-      }),
-    )
-    .use(httpErrorHandler());
+  return (
+    middy(handler)
+      // .use(errorLogger())
+      // .use(inputOutputLogger())
+      // .use(httpHeaderNormalizer())
+      // .use(httpEventNormalizer())
+      .use(jsonBodyParser())
+      .use(
+        validator({
+          eventSchema: eventSchema && transpileSchema(eventSchema),
+          // responseSchema: responseSchema && transpileSchema(responseSchema),
+        }),
+      )
+      .use(httpErrorHandler())
+  );
 };

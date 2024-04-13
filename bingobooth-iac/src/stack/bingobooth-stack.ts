@@ -4,12 +4,19 @@ import BingoboothApi from './api';
 
 interface BingoboothStackProps extends cdk.StackProps {
   stage: string;
+  spotify: {
+    clientId: string;
+    clientSecret: string;
+  };
 }
 
 export class BingoboothIacStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props: BingoboothStackProps) {
     super(scope, id, props);
 
-    new BingoboothApi(this, 'BingoboothApi', { stage: props.stage });
+    new BingoboothApi(this, 'BingoboothApi', {
+      stage: props.stage,
+      spotify: props.spotify,
+    });
   }
 }

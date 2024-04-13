@@ -1,0 +1,37 @@
+@spotify_playlist_id = 4PccHQruxl54Db0RcSkgUx
+# @spotify_playlist_id = 7Gglh5v1w2Nuz5wfav7JpM
+# @name get-playlist
+POST https://75bu3dofpa.execute-api.eu-west-1.amazonaws.com/get-playlist
+Content-Type: application/json
+Accept: */*
+
+{
+  "playlistUrl": "https://open.spotify.com/playlist/{{spotify_playlist_id}}"
+}
+
+###
+
+@spotify_client_id = 9af724cce45f42039bd7f0aefdf6d1fe
+@spotify_client_secret = b404544aba4646e18d0a246e390948eb
+###
+# @name spotify_auth
+POST https://accounts.spotify.com/api/token HTTP/1.1
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=client_credentials&client_id={{spotify_client_id}}&client_secret={{spotify_client_secret}}
+
+###
+# @name spotify_playlist
+GET https://api.spotify.com/v1/playlists/{{spotify_playlist_id}}
+Authorization: Bearer {{spotify_auth.response.body.access_token}}
+
+###
+# @name spotify_playlist_filter_fields
+GET https://api.spotify.com/v1/playlists/{{spotify_playlist_id}}?fields=name,images(url),tracks(total)
+Authorization: Bearer {{spotify_auth.response.body.access_token}}
+
+
+###
+# @name spotify_playlist_tracks
+GET https://api.spotify.com/v1/playlists/{{spotify_playlist_id}}/tracks
+Authorization: Bearer {{spotify_auth.response.body.access_token}}
