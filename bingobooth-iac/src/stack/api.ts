@@ -55,6 +55,16 @@ class BingoboothApi extends Construct {
       memorySize: 512,
     });
 
+    this.addEndpoint({
+      functionName: 'get-tracks',
+      methods: [apigwv2.HttpMethod.POST],
+      environment: {
+        SPOTIFY_CLIENT_ID: props.spotify.clientId,
+        SPOTIFY_CLIENT_SECRET: props.spotify.clientSecret,
+      },
+      memorySize: 512,
+    });
+
     new CfnOutput(this, 'ApiEndpoint', {
       value: this.api.apiEndpoint,
     });

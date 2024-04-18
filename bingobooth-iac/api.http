@@ -10,6 +10,16 @@ Accept: */*
 }
 
 ###
+# @name get-tracks
+POST https://75bu3dofpa.execute-api.eu-west-1.amazonaws.com/get-tracks
+Content-Type: application/json
+Accept: */*
+
+{
+  "playlistId": "{{spotify_playlist_id}}"
+}
+
+###
 
 @spotify_client_id = {{$dotenv SPOTIFY_CLIENT_ID}}
 @spotify_client_secret = {{$dotenv SPOTIFY_CLIENT_SECRET}}
@@ -34,4 +44,9 @@ Authorization: Bearer {{spotify_auth.response.body.access_token}}
 ###
 # @name spotify_playlist_tracks
 GET https://api.spotify.com/v1/playlists/{{spotify_playlist_id}}/tracks
+Authorization: Bearer {{spotify_auth.response.body.access_token}}
+
+###
+# @name spotify_playlist_tracks
+GET https://api.spotify.com/v1/playlists/{{spotify_playlist_id}}/tracks?fields=items(track.name,track.artists(name))
 Authorization: Bearer {{spotify_auth.response.body.access_token}}

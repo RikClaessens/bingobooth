@@ -23,12 +23,14 @@ const doApiCall = (url: string, accessToken: string): Promise<Response> => {
   });
 };
 
-const getPlaylistTracksFromId = async (id: string): Promise<Response> => {
+export const getPlaylistTracksFromId = async (
+  id: string,
+): Promise<Response> => {
   const accessToken = await getAccessToken();
   console.log({ accessToken });
 
   const result = await doApiCall(
-    `https://api.spotify.com/v1/playlists/${id}/tracks`,
+    `https://api.spotify.com/v1/playlists/${id}/tracks?fields=name,owner.display_name,images(url),items(track.name,track.artists(name))`,
     accessToken,
   );
   const tracks = await result.json();
